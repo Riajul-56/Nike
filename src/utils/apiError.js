@@ -9,8 +9,19 @@ class ApiError extends Error {
 
     // }
 
-//  @param {number} statuscode -the HTTP status code for the error 
-//  @param {string} message  -the error message 
+    //  @param {number} statuscode -the HTTP status code for the error 
+    //  @param {string} message  -the error message 
+    //  @param {object} erros -additional error details (optional)
+
+
+    constructor(statuscode, message = "Somthing went wrong ", erros = {}, stack = " ", arrocode = '') {
+        super(message);
+        this.name=this.constructor.name;
+        this.success=false;
+        this.statuscode=statuscode;
+        
+    }
+
 
 }
 export default ApiError;
