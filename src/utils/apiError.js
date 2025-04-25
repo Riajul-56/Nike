@@ -52,5 +52,15 @@ class ApiError extends Error {
         return new ApiError(500, message, errors, " ", errorCode)
     }
 
+    //204 No Content 
+    static noContent(message = "No Content") {
+        return new ApiError(204, message);
+    }
+
+    //Custom Error 
+    static customError(statuscode, message, errors = {}, errorCode = " ") {
+        return new ApiError(statuscode, message, errors, " ", errorCode)
+    }
+
 }
 export default ApiError;
