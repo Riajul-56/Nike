@@ -1,9 +1,18 @@
 class ApiSuccess {
-    constructor(data = {}, message, statuscode) {
-        this.success = statuscode < 400;
-        this.statuscode = statuscode;
+    constructor(statusCode = 200, message = "Success", data = {}, meta = {}) {
+        this.success = statusCode < 400;
+        this.statusCode = statusCode;
         this.message = message;
         this.data = data;
+        this.meta = meta;
     }
+
+    //200 ok
+    static ok(data = {}, message = "Ok", meta = {}) {
+        return new ApiSuccess(200, message, data, meta)
+    }
+
+    //201 created 
+    static created(data)
 }
 export default ApiSuccess;

@@ -8,6 +8,7 @@ class ApiError extends Error {
     constructor(statuscode, message = "Somthing went wrong ", errors = {}, stack = " ", errorCode = '') {
         super(message);
 
+        this.name="Something went wrong",
         this.success = false;
         this.statuscode = statuscode;
         this.message = message;
@@ -58,7 +59,7 @@ class ApiError extends Error {
     }
 
     //Custom Error 
-    static customError(statuscode, message, errors = {}, errorCode = " ") {
+    static custom(statuscode, message, errors = {}, errorCode = " ") {
         return new ApiError(statuscode, message, errors, " ", errorCode)
     }
 
