@@ -18,5 +18,15 @@ class ApiSuccess {
     }
 
     
+    //204 NO Content(rare,Data wii be empty)
+    static noContent(message="No Content"){
+        return new ApiSuccess(204,message)
+    }
+
+
+    //Custom success
+    static custom(statusCode,message,data={},meta={}){
+        return new ApiSuccess(statusCode,message,data,meta)
+    }
 }
 export default ApiSuccess;
