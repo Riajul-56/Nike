@@ -13,6 +13,10 @@ class ApiSuccess {
     }
 
     //201 created 
-    static created(data)
+    static created(data = {}, message = "Resource created", meta={}) {
+        return new ApiSuccess(201,message,data,meta)
+    }
+
+    
 }
 export default ApiSuccess;
