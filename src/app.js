@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import { WHITELIST } from './constants.js'
 import cookieParser from 'cookie-parser'
-import errorHandler from './middlewares/Errorhandler.js'
+import errorHandler from './middlewares/errorHandler.middleware.js'
 
 
 const app = express()
@@ -11,16 +11,15 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 
 app.use(cors({
-    origin: function (origin, callback) {
-        if (WHITELIST.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    },
+    origin: WHITELIST,
     credentials: true,
 }))
 
 app.use(cookieParser())
+
+//define routes
+import healthCheckRoute from "./routes/healthCheck.route.js"
+app.use(healthCheckRoute)
+
 app.use(errorHandler)
-export { app }
+export { app };
