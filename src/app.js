@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import { WHITELIST } from './constants.js'
 import cookieParser from 'cookie-parser'
+import errorHandler from './middlewares/Errorhandler.js'
 
 
 const app = express()
@@ -21,5 +22,5 @@ app.use(cors({
 }))
 
 app.use(cookieParser())
-
+app.use(errorHandler)
 export { app }
