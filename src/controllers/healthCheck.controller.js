@@ -1,7 +1,7 @@
 import ApiError from "../utils/apiError.js"
 import ApiSuccess from "../utils/apiSuccess.js"
 
-const healthCheck = async (req, res) => {
+const healthCheck = async (_, res) => {
     try {
         const uptimeSeconds = process.uptime()
         const uptimeFormatted = formatUptime(uptimeSeconds)
