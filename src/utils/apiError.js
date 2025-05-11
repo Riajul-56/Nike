@@ -8,8 +8,8 @@ class ApiError extends Error {
     constructor(statuscode, message = "Somthing went wrong ", errors = {}, stack = " ", errorCode = '') {
         super(message);
 
-        this.name=this.constructor.name,
-        this.success = false;
+        this.name = this.constructor.name,
+            this.success = false;
         this.statuscode = statuscode;
         this.message = message;
         this.errors = errors;
@@ -58,6 +58,11 @@ class ApiError extends Error {
         return new ApiError(204, message);
     }
 
+    //Database Error
+    static databaseError(message = "Database Error", errors = {}, errorCode = "DB_500 ") {
+        return new ApiError(500, message, errors, " ", errorCode)
+    }
+    
     //Custom Error 
     static custom(statuscode, message, errors = {}, errorCode = " ") {
         return new ApiError(statuscode, message, errors, " ", errorCode)
