@@ -7,7 +7,7 @@ const serverStart = async () => {
     try {
         await dbConnection()
         app.listen(PORT, () => {
-            console.log(`Server is running http:://localhost:${PORT}/`)
+            console.log(`Server is running http://localhost:${PORT}/`)
         })
     } catch (error) {
         console.log("~file:index.js:50-serverStart ~ error ", error)
