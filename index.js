@@ -10,7 +10,8 @@ const serverStart = async () => {
             console.log(`Server is running http://localhost:${PORT}/`)
         })
     } catch (error) {
-        console.log("~file:index.js:50-serverStart ~ error ", error)
+        console.log("~file:index.js:50 ~serverStart ~ error ", error)
+        process.exit(1)
     }
 }
 serverStart()
