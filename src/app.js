@@ -19,7 +19,8 @@ app.use(cookieParser())
 
 //define routes
 import healthCheckRoute from "./routes/healthCheck.route.js"
+import userRoute from "./routes/user.route.js"
 app.use(healthCheckRoute)
-
+app.use("/api/v1", userRoute)
 app.use(errorHandler)
 export { app };
