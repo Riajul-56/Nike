@@ -3,29 +3,35 @@ import mongoose, { Schema } from "mongoose";
 const userSchema = new Schema({
     username: {
         type: String,
-        required: [true, "username is required"],
+        required: true,
         unique: true,
-        trim:true
-    },
-    firstName: {
-        type: String,
-        required: [true, "firstName is required"],
         trim: true
     },
-    lastName: {
+    name: {
         type: String,
-        required: [true, "lastName is required"],
-        trim: true
+        require: [true, "Name is required"]
     },
     email: {
         type: String,
-        required: [true, "email is required"],
+        required: true,
         unique: true,
         trim: true
     },
     password: {
         type: String,
-        required: [true, "password is required"]
+        default: null
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    passwordResetToken: {
+        type: String,
+        default: null
+    },
+    passwordResetExpires: {
+        type: date,
+        default: null
     },
     status: {
         type: String,
