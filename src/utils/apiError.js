@@ -64,8 +64,8 @@ class ApiError extends Error {
     }
     
     //Custom Error 
-    static custom(statuscode, message, errors = {}, errorCode = " ") {
-        return new ApiError(statuscode, message, errors, " ", errorCode)
+    static custom(statuscode, message, errors = {},stack=" ", errorCode = " ") {
+        return new ApiError(statuscode, message, errors, stack, errorCode)
     }
 
 }
