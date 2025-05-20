@@ -4,7 +4,8 @@ const userSignupSchema = z.object({
     username: z.string().min(3),
     name: z.string().min(3),
     email: z.string().email(),
-    password: z.string().regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+    password: z.string().regex(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
         "Password must contain at least one lowercase letter,one uppercase letter,one number and at least 8 chacaters long "
     ),
 })

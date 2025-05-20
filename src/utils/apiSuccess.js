@@ -8,12 +8,12 @@ class ApiSuccess {
     }
 
     //200 ok
-    static ok(data = {}, message = "Ok", meta = {}) {
+    static ok(message = "Ok", data = {},  meta = {}) {
         return new ApiSuccess(200, message, data, meta)
     }
 
     //201 created 
-    static created(data = {}, message = "Resource created", meta={}) {
+    static created(message = "Resource created", data = {}, meta={}) {
         return new ApiSuccess(201,message,data,meta)
     }
 

@@ -9,7 +9,7 @@ const errorHandler = (err, _req, res, _next) => {
         message,
         errors,
         errorCode,
-        ...(NODE_ENV === "development" && (stack))
+        ...(NODE_ENV === "development" && { stack })
     })
 
 }
