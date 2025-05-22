@@ -4,31 +4,30 @@ import ApiError from "./apiError.js";
 import Mailgen from "mailgen";
 
 async function sendMail(option) {
-    const transporter = nodemailer.createTransport({
-        host: MAIL_SERVICE,
-        port: MAIL_PORT,
-        secure: NODE_ENV === "development" ? false : true,
-        auth: {
-            user: MAIL_USER,
-            pass: MAIL_PASS
-        }
-    });
-
-    const { emailBody, emailText } = mailgenConfig(option.mailFormat)
-
-    const mail = await transporter.sendMail({
-        from: '"Nike" <contcat@nike.email>',
-        to: option.email,
-        subject: option.subject,
-        text: emailText,
-        html: emailBody,
-    });
     try {
-        await mail()
+        const transporter = nodemailer.createTransport({
+            host: MAIL_SERVICE,
+            port: MAIL_PORT,
+            secure: NODE_ENV === "development" ? false : true,
+            auth: {
+                user: MAIL_USER,
+                pass: MAIL_PASS
+            }
+        });
 
+        const { emailBody, emailText } = mailgenConfig(option.mailFormat)
+
+        await transporter.sendMail({
+            from: '"Nike" <contcat@nike.email>',
+            to: option.email,
+            subject: option.subject,
+            text: emailText,
+            html: emailBody,
+        });
     } catch (error) {
         throw ApiError.serverError(error.message)
     }
+
 }
 
 
