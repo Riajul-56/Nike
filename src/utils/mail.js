@@ -45,16 +45,23 @@ function mailgenConfig(mailFormat) {
     return { emailBody, emailText }
 }
 
-function verifyEmail(email){
-    const mailFormat ={
-        body:{
-            name:email.name,
-            intro:"Welcome to Nike! We're very excited to have you on board",
-            action:{
-                
-            }
-        }
+function verifyEmail(name, verifyUrl) {
+    return {
+        body: {
+            name: name,
+            intro: "Welcome to Nike! We're very excited to have you on board",
+            action: {
+                instruction: "To get started with nike,please click here.",
+                button: {
+                    color: "#22bc66",
+                    text: "Confirm your account",
+                    link: verifyUrl,
+                },
+            },
+            outro: "Need help,or have question? Just reply to this email, we'd love to help. ",
+        },
     }
+
 }
 
-export { sendMail }
+export { sendMail, verifyEmail }
