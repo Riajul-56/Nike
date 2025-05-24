@@ -61,14 +61,17 @@ const verifymail = asyncHandler(async (req, res) => {
 
 const sigin = asyncHandler(async (req, res) => {
     const { email, password } = req.body
+
     const user = await User.findOne({ email })
     if (!user) {
         throw ApiError.notFound("Invalid credentials")
     }
+
     const isMatch = await user.comparePassword(password)
     if (!isMatch) {
         throw ApiError.notFound("Invalid Password")
     }
+
     const accessToken = user.accessToken()
     const refreshToken = user.refreshToken()
     const cookieOptions = {
