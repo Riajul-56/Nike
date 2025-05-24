@@ -8,20 +8,23 @@ import jwt from "jsonwebtoken"
 
 const signup = asyncHandler(async (req, res) => {
     const { username, name, email, password } = req.body
+
     const usernameExists = await User.findOne({ username })
     if (usernameExists) {
         throw ApiError.badRequest("Username already exists")
     }
+
     const emailExists = await User.findOne({ email })
     if (emailExists) {
         throw ApiError.badRequest("Email already exists")
     }
-    const createdUser = await User.create({ username, name, email, password })
 
+    const createdUser = await User.create({ username, name, email, password })
 
     const user = await User.findById(createdUser._id).select("-_v -password -createdAt -updatedAt -passwordResetToken -passwordResetExpires")
 
     const token = user.jwtToken()
+
     const verifyUrl = `${APP_URL}/api/v1/users/verify?token=${token}`
     sendMail({
         email,
@@ -37,10 +40,12 @@ const verifymail = asyncHandler(async (req, res) => {
     if (!token) {
         throw ApiError.badRequest("Token is required")
     }
+
     const decodeToken = jwt.verify(token, JWT_SECRET)
     if (!decodeToken) {
         throw ApiError.badRequest("Invalid token")
     }
+
     const user = await User.findById(decodeToken.id).select("-_v -password -createdAt -updatedAt -passwordResetToken -passwordResetExpires")
     if (!user) {
         throw ApiError.notFound("User not Found")
@@ -54,4 +59,32 @@ const verifymail = asyncHandler(async (req, res) => {
     }
 })
 
-export { signup, verifymail }
+const sigin = asyncHandler(async (req, res) => {
+    const { email, password } = req.body
+    const user = await User.findOne({ email })
+    if (!user) {
+        throw ApiError.notFound("Invalid credentials")
+    }
+    const isMatch = await user.comparePassword(password)
+    if (!isMatch) {
+        throw ApiError.notFound("Invalid Password")
+    }
+    const accessToken = user.accessToken()
+    const refreshToken = user.refreshToken()
+    const cookieOptions = {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict"
+    }
+
+
+    return res
+        .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 })
+        .cookie("refreshToken", refreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 })
+
+        .status(200)
+        .json(ApiSuccess.ok("User Signed in", { accessToken, refreshToken }))
+})
+
+
+export { signup, verifymail, sigin }
