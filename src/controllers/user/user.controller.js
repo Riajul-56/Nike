@@ -80,7 +80,6 @@ const sigin = asyncHandler(async (req, res) => {
         sameSite: "strict"
     }
 
-
     return res
         .cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 })
         .cookie("refreshToken", refreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 })
