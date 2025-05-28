@@ -90,8 +90,9 @@ const sigin = asyncHandler(async (req, res) => {
 
 const signout = asyncHandler(async (res, req) => {
     return res
-        .clearcookie("accessToken")
-        .clearcookie("refreshToken")
+        .clearCookie("accessToken")
+        .clearCookie("refreshToken")
+        .status(200)
         .json(ApiSuccess.ok("User signed out"))
 })
 

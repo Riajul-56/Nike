@@ -23,6 +23,6 @@ import userRoute from "./routes/user.route.js"
 
 
 app.use(healthCheckRoute)
-app.use("/api/v1", userRoute)
+app.use("/api/v1/users", userRoute)
 app.use(errorHandler)
 export { app };

@@ -1,7 +1,7 @@
-import { ACCESS_TOKEN_SECRET } from "../constants";
-import { User } from "../models/user.model";
-import ApiError from "../utils/apiError";
-import { asyncHandler } from "../utils/asynceHandler";
+import { ACCESS_TOKEN_SECRET } from "../constants.js";
+import { User } from "../models/user.model.js";
+import ApiError from "../utils/apiError.js";
+import { asyncHandler } from "../utils/asynceHandler.js";
 import jwt from "jsonwebtoken"
 
 
