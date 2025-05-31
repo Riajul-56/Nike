@@ -24,7 +24,6 @@ const signup = asyncHandler(async (req, res) => {
     const user = await User.findById(createdUser._id).select("-_v -password -createdAt -updatedAt -passwordResetToken -passwordResetExpires")
 
     const token = user.jwtToken()
-
     const verifyUrl = `${APP_URL}/api/v1/users/verify?token=${token}`
     sendMail({
         email,
@@ -88,13 +87,48 @@ const sigin = asyncHandler(async (req, res) => {
         .json(ApiSuccess.ok("User Signed in", { accessToken, refreshToken }))
 })
 
-const signout = asyncHandler(async (res, req) => {
+const signout = asyncHandler(async (_req, res) => {
     return res
         .clearCookie("accessToken")
         .clearCookie("refreshToken")
-        .status(200)
-        .json(ApiSuccess.ok("User signed out"))
+        .status(200).
+        json(ApiSuccess.ok("User signed out"))
+})
+
+const updateUser = asyncHandler(async (req, res) => {
+    const { username, name, email } = req.body
+
+    const user = await user.findBy(req.user.id)
+    if (!user) {
+        throw ApiError.notFound('User not found')
+    }
+
+    const isUsernameExists = await User.findOne({ username })
+    if (isUsernameExists) {
+        throw ApiError.badRequest('Username already exists')
+    }else{
+        user.username=username
+    }
+
+    const isEmailExists = await User.findOne({ email })
+    if (isEmailExists) {
+        throw ApiError.badRequest('Email already exists')
+    } else {
+        user.isVerified = false
+        user.email = email
+        const token = user.jwtToken()
+        const verifyUrl = `${APP_URL}/api/v1/users/verify?token=${token}`
+        sendMail({
+            email,
+            subject: "Verify you email",
+            mailFormat: verifyEmail(name, verifyUrl)
+        })
+    }
+
+    await user.save()
+    user.name = name
+    return res.status(300).json(ApiSuccess.ok('User Updated', user))
 })
 
 
-export { signup, verifymail, sigin, signout }
+export { signup, verifymail, sigin, signout, updateUser }
