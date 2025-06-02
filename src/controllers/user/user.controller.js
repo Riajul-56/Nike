@@ -95,40 +95,65 @@ const signout = asyncHandler(async (_req, res) => {
         json(ApiSuccess.ok("User signed out"))
 })
 
+
+
 const updateUser = asyncHandler(async (req, res) => {
     const { username, name, email } = req.body
-
-    const user = await user.findBy(req.user.id)
+    const user = await user.findBy(req.user._id)
     if (!user) {
         throw ApiError.notFound('User not found')
     }
 
-    const isUsernameExists = await User.findOne({ username })
-    if (isUsernameExists) {
-        throw ApiError.badRequest('Username already exists')
-    }else{
-        user.username=username
+
+
+    if (user.username !== username) {
+        const isUsernameExists = await User.findOne({ username })
+        if (isUsernameExists) {
+            throw ApiError.badRequest('Username already exists')
+        } else {
+            user.username = username
+        }
     }
 
-    const isEmailExists = await User.findOne({ email })
-    if (isEmailExists) {
-        throw ApiError.badRequest('Email already exists')
-    } else {
-        user.isVerified = false
-        user.email = email
-        const token = user.jwtToken()
-        const verifyUrl = `${APP_URL}/api/v1/users/verify?token=${token}`
-        sendMail({
-            email,
-            subject: "Verify you email",
-            mailFormat: verifyEmail(name, verifyUrl)
-        })
+
+
+    if (user.email !== email) {
+        const isEmailExists = await User.findOne({ email })
+        if (isEmailExists) {
+            throw ApiError.badRequest('Email already exists')
+        } else {
+            user.isVerified = false
+            user.email = email
+            const token = user.jwtToken()
+            const verifyUrl = `${APP_URL}/api/v1/users/verify?token=${token}`
+            sendMail({
+                email,
+                subject: "Verify you email",
+                mailFormat: verifyEmail(name, verifyUrl)
+            })
+        }
     }
 
-    await user.save()
+
     user.name = name
+    await user.save()
     return res.status(300).json(ApiSuccess.ok('User Updated', user))
 })
 
 
-export { signup, verifymail, sigin, signout, updateUser }
+const updatePassword = asyncHandler(async (req, res) => {
+    const { oldpassword, newpassword } = req.body
+    const user = req.user
+    if (oldpassword || newpassword) {
+        throw ApiError.badRequest('New password can not be same as old passwoed')
+    }
+    const isMatch = await user.comparePassword(oldpassword)
+    if (!isMatch) {
+        throw ApiError.notFound('Old password us incorrect')
+    }
+    user.password = newpassword
+    await user.save()
+    return res.status(200).json(ApiSuccess.ok('Password updated'))
+})
+
+export { signup, verifymail, sigin, signout, updateUser, updatePassword }
