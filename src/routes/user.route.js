@@ -10,8 +10,8 @@ router.post("/signup", validationMiddleware(userSignupSchema), signup)
 router.get("/verify", verifymail)
 router.post("/sigin", validationMiddleware(userSigninSchema), sigin)
 router.get("/signout", auth, signout)
-router.get("/update", auth, validationMiddleware(userUpdateSchema), updateUser)
-router.get("/update_password", auth, validationMiddleware(userPasswordUpdateSchema), updatePassword)
+router.post("/update", auth, validationMiddleware(userUpdateSchema), updateUser)
+router.post("/update-password", auth, validationMiddleware(userPasswordUpdateSchema), updatePassword)
 
 
 export default router

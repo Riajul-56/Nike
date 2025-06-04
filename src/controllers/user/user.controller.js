@@ -40,9 +40,11 @@ const verifymail = asyncHandler(async (req, res) => {
         throw ApiError.badRequest("Token is required")
     }
 
-    const decodeToken = jwt.verify(token, JWT_SECRET)
-    if (!decodeToken) {
-        throw ApiError.badRequest("Invalid token")
+    let decodeToken
+    try {
+        decodeToken = jwt.verify(token, JWT_SECRET)
+    } catch (error) {
+        throw ApiError.unauthorized("Invalid or expired access token.")
     }
 
     const user = await User.findById(decodeToken.id).select("-_v -password -createdAt -updatedAt -passwordResetToken -passwordResetExpires")
@@ -99,7 +101,7 @@ const signout = asyncHandler(async (_req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
     const { username, name, email } = req.body
-    const user = await user.findBy(req.user._id)
+    const user = await User.findById(req.user._id)
     if (!user) {
         throw ApiError.notFound('User not found')
     }
@@ -142,16 +144,16 @@ const updateUser = asyncHandler(async (req, res) => {
 
 
 const updatePassword = asyncHandler(async (req, res) => {
-    const { oldpassword, newpassword } = req.body
+    const { oldPassword, newPassword } = req.body
     const user = req.user
-    if (oldpassword || newpassword) {
-        throw ApiError.badRequest('New password can not be same as old passwoed')
+    if (oldPassword || newPassword) {
+        throw ApiError.badRequest('New password can not be same as old password')
     }
-    const isMatch = await user.comparePassword(oldpassword)
+    const isMatch = await user.comparePassword(oldPassword)
     if (!isMatch) {
         throw ApiError.notFound('Old password us incorrect')
     }
-    user.password = newpassword
+    user.password = newPassword
     await user.save()
     return res.status(200).json(ApiSuccess.ok('Password updated'))
 })
