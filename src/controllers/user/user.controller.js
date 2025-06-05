@@ -161,7 +161,7 @@ const updateUser = asyncHandler(async (req, res) => {
 const updatePassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body
     const user = req.user
-    if (oldPassword || newPassword) {
+    if (oldPassword === newPassword) {
         throw ApiError.badRequest('New password can not be same as old password')
     }
     const isMatch = await user.comparePassword(oldPassword)
@@ -189,26 +189,42 @@ const forgotPassword = asyncHandler(async (req, res) => {
         mailFormat: forgotPasswordFormat(user.name, otp)
     })
     user.passwordResetToken = otp
-    user.passwordResetExpires = Data.now() + 5 * 60 * 1000
+    user.passwordResetExpires = Date.now() + 5 * 60 * 1000
     await user.save()
     return res.status(200).json(ApiSuccess.ok('OTP sent.'))
 })
 
 
 //============================================ Validate OTP =======================================================================//
+
 const validateOpt = asyncHandler(async (req, res) => {
     const { otp } = req.body
     const user = await User.findOne({ passwordResetToken: otp })
     if (!user) {
         throw ApiError.notFound('Invalid otp')
     }
-    if (user.passwordResetExpires < Data.now()) {
+    if (user.passwordResetExpires < Date.now()) {
         throw ApiError.notFound('Otp expired')
     }
-    user.passwordResetToken=null
-    user.passwordResetExpires=null
+    user.passwordResetToken = null
+    user.passwordResetExpires = null
     await user.save()
     return res.status(200).json(ApiSuccess.ok('Otp verified'))
 })
 
-export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt }
+
+//============================================ Reset Password =======================================================================//
+
+const resetpassword = asyncHandler(async (req, res) => {
+    const { otp, password } = req.body
+    const user = await User.findOne({ passwordResetToken: otp })
+    if (!user) {
+        throw ApiError.notFound('Invalid otp')
+    }
+    user.password = password
+    user.passwordResetToken = null
+    user.passwordResetExpires = null
+    await user.save()
+    return res.status(200).json(ApiSuccess.ok('Password reset successfully'))
+})
+export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword }
