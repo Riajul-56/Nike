@@ -82,7 +82,8 @@ function forgotPasswordFormat(name, otp) {
                 instruction: "Using the following One-Time Password (OTP) to reset your password.",
                 button: {
                     color: "#22bc66",
-                    text: `OTP ${otp}`
+                    text: `${otp}`,
+                    link:'#'
 
                 },
             },

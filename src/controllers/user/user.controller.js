@@ -186,9 +186,12 @@ const forgotPassword = asyncHandler(async (req, res) => {
     sendMail({
         email,
         subject: 'reset password',
-        mailFormat: forgotPasswordFormat(user, req, res)
+        mailFormat: forgotPasswordFormat(user.name, otp)
     })
-    return req.status(200).json(ApiSuccess.ok('Password updated.'))
+    user.passwordResetToken = otp
+    user.passwordResetExpires = Data.now() + 5 * 60 * 1000
+    await user.save()
+    return res.status(200).json(ApiSuccess.ok('OTP sent.'))
 })
 
 export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword }
