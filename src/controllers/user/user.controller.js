@@ -3,8 +3,11 @@ import { User } from "../../models/user.model.js";
 import ApiError from "../../utils/apiError.js";
 import ApiSuccess from "../../utils/apiSuccess.js";
 import { asyncHandler } from "../../utils/asynceHandler.js";
-import { sendMail, verifyEmail } from "../../utils/mail.js";
+import { sendMail, forgotPasswordFormat, verifyEmailFormat } from "../../utils/mail.js";
 import jwt from "jsonwebtoken"
+
+
+//============================================ Sign Up =======================================================================//
 
 const signup = asyncHandler(async (req, res) => {
     const { username, name, email, password } = req.body
@@ -28,11 +31,14 @@ const signup = asyncHandler(async (req, res) => {
     sendMail({
         email,
         subject: "Verify you email",
-        mailFormat: verifyEmail(name, verifyUrl)
+        mailFormat: verifyEmailFormat(name, verifyUrl)
     })
 
     return res.status(200).json(ApiSuccess.created("User created", user))
 })
+
+
+//============================================ Email Verify =======================================================================//
 
 const verifymail = asyncHandler(async (req, res) => {
     const { token } = req.query
@@ -59,6 +65,9 @@ const verifymail = asyncHandler(async (req, res) => {
         return res.status(200).json(ApiSuccess.ok("User verified", user))
     }
 })
+
+
+//============================================ Sign In =======================================================================//
 
 const sigin = asyncHandler(async (req, res) => {
     const { email, password } = req.body
@@ -89,6 +98,9 @@ const sigin = asyncHandler(async (req, res) => {
         .json(ApiSuccess.ok("User Signed in", { accessToken, refreshToken }))
 })
 
+
+//============================================ Sign Out =======================================================================//
+
 const signout = asyncHandler(async (_req, res) => {
     return res
         .clearCookie("accessToken")
@@ -98,6 +110,7 @@ const signout = asyncHandler(async (_req, res) => {
 })
 
 
+//============================================ User Update =======================================================================//
 
 const updateUser = asyncHandler(async (req, res) => {
     const { username, name, email } = req.body
@@ -143,6 +156,8 @@ const updateUser = asyncHandler(async (req, res) => {
 })
 
 
+//============================================ Update password =======================================================================//
+
 const updatePassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body
     const user = req.user
@@ -158,4 +173,22 @@ const updatePassword = asyncHandler(async (req, res) => {
     return res.status(200).json(ApiSuccess.ok('Password updated'))
 })
 
-export { signup, verifymail, sigin, signout, updateUser, updatePassword }
+
+//============================================ Password Reset =======================================================================//
+
+const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body
+    const user = await User.findOne({ email })
+    if (!user) {
+        throw ApiError.notFound('User not found.')
+    }
+    const otp = Math.floor(1000 + Math.random() * 9000)
+    sendMail({
+        email,
+        subject: 'reset password',
+        mailFormat: forgotPasswordFormat(user, req, res)
+    })
+    return req.status(200).json(ApiSuccess.ok('Password updated.'))
+})
+
+export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword }

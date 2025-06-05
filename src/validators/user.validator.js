@@ -28,4 +28,8 @@ const userPasswordUpdateSchema = z.object({
     ),
 })
 
+const userForgotPasswordSchema = z.object({
+    email: z.string().email(),
+})
+
 export { userSignupSchema, userSigninSchema, userUpdateSchema, userPasswordUpdateSchema }

@@ -3,6 +3,8 @@ import { MAIL_PASS, MAIL_PORT, MAIL_SERVICE, MAIL_USER, NODE_ENV } from "../cons
 import ApiError from "./apiError.js";
 import Mailgen from "mailgen";
 
+
+//================================================= Send Mail Fromat =====================================================//
 async function sendMail(option) {
     try {
         const transporter = nodemailer.createTransport({
@@ -44,7 +46,11 @@ function mailgenConfig(mailFormat) {
     return { emailBody, emailText }
 }
 
-function verifyEmail(name, verifyUrl) {
+
+//================================================= Verify Email Format =====================================================//
+
+
+function verifyEmailFormat(name, verifyUrl) {
     return {
         body: {
             name: name,
@@ -63,4 +69,26 @@ function verifyEmail(name, verifyUrl) {
 
 }
 
-export { sendMail, verifyEmail }
+
+//================================================= Forgot  Password Format =====================================================//
+
+
+function forgotPasswordFormat(name, otp) {
+    return {
+        body: {
+            name: name,
+            intro: `Hi ${name}, We received a request to reset a password`,
+            action: {
+                instruction: "Using the following One-Time Password (OTP) to reset your password.",
+                button: {
+                    color: "#22bc66",
+                    text: `OTP ${otp}`
+
+                },
+            },
+            outro: "If you don't request this, you can ignore this message, for help, just reply to this email.",
+        },
+    }
+}
+
+export { sendMail, verifyEmailFormat, forgotPasswordFormat }
