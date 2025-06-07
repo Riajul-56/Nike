@@ -227,4 +227,6 @@ const resetpassword = asyncHandler(async (req, res) => {
     await user.save()
     return res.status(200).json(ApiSuccess.ok('Password reset successfully'))
 })
+
+
 export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword }
