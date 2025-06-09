@@ -1,4 +1,4 @@
-import { APP_URL, GOOGLE_CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_OAUTH_SCOPES, GOOGLE_OAUTH_URL, JWT_SECRET } from "../../constants.js";
+import { APP_URL, GOOGLE_ACCESS_TOKEN_URL, GOOGLE_CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_OAUTH_SCOPES, GOOGLE_OAUTH_URL, JWT_SECRET, GOOGLE_TOKEN_INFO_URL } from "../../constants.js";
 import { User } from "../../models/user.model.js";
 import ApiError from "../../utils/apiError.js";
 import ApiSuccess from "../../utils/apiSuccess.js";
@@ -120,6 +120,31 @@ const signinWithGoogle = asyncHandler(async (req, res) => {
 })
 
 
+//============================================ Google Call Back =======================================================================//
+
+const googleCallBack = asyncHandler(async (req, res) => {
+
+    const { code } = req.query;
+    const data = {
+        code,
+        client_id: GOOGLE_CLIENT_ID,
+        client_secret: GOOGLE_CLIENT_SECRET,
+        redirect_uri: GOOGLE_CALLBACK_URL,
+        grant_type: "authorization_code",
+    };
+    const response = await fetch(GOOGLE_ACCESS_TOKEN_URL, {
+        method: "POST",
+        body: JSON.stringify(data),
+    });
+    const access_token_data = await response.json();
+
+    const { id_token } = access_token_data;
+    const token_info_response = await fetch(`${GOOGLE_TOKEN_INFO_URL}?id_token=${id_token}`);
+    const token_info =await token_info_response.json()
+    res.status(token_info_response.status).json(ApiSuccess.ok('User signed in',token_info));
+})
+
+
 //============================================ User Update =======================================================================//
 
 const updateUser = asyncHandler(async (req, res) => {
@@ -158,8 +183,6 @@ const updateUser = asyncHandler(async (req, res) => {
             })
         }
     }
-
-
     user.name = name
     await user.save()
     return res.status(300).json(ApiSuccess.ok('User Updated', user))
@@ -239,4 +262,4 @@ const resetpassword = asyncHandler(async (req, res) => {
 })
 
 
-export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle }
+export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle, googleCallBack }
