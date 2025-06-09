@@ -1,4 +1,4 @@
-import { APP_URL, JWT_SECRET } from "../../constants.js";
+import { APP_URL, GOOGLE_CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_OAUTH_SCOPES, GOOGLE_OAUTH_URL, JWT_SECRET } from "../../constants.js";
 import { User } from "../../models/user.model.js";
 import ApiError from "../../utils/apiError.js";
 import ApiSuccess from "../../utils/apiSuccess.js";
@@ -107,6 +107,16 @@ const signout = asyncHandler(async (_req, res) => {
         .clearCookie("refreshToken")
         .status(200).
         json(ApiSuccess.ok("User signed out"))
+})
+
+
+//============================================ Sign in with Google =======================================================================//
+const signinWithGoogle = asyncHandler(async (req, res) => {
+    const state = "some_state";
+    const scopes = GOOGLE_OAUTH_SCOPES.join(" ");
+    const GOOGLE_OAUTH_CONSENT_SCREEN_URL = `${GOOGLE_OAUTH_URL}?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_CALLBACK_URL}&access_type=offline&response_type=code&state=${state}&scope=${scopes}`;
+    res.redirect(GOOGLE_OAUTH_CONSENT_SCREEN_URL);
+
 })
 
 
@@ -229,4 +239,4 @@ const resetpassword = asyncHandler(async (req, res) => {
 })
 
 
-export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword }
+export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle }
