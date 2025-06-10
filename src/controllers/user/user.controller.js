@@ -84,6 +84,7 @@ const sigin = asyncHandler(async (req, res) => {
 
     const accessToken = user.accessToken()
     const refreshToken = user.refreshToken()
+
     const cookieOptions = {
         httpOnly: true,
         secure: true,
@@ -123,8 +124,8 @@ const signinWithGoogle = asyncHandler(async (req, res) => {
 //============================================ Google Call Back =======================================================================//
 
 const googleCallBack = asyncHandler(async (req, res) => {
-
     const { code } = req.query;
+
     const data = {
         code,
         client_id: GOOGLE_CLIENT_ID,
@@ -132,16 +133,56 @@ const googleCallBack = asyncHandler(async (req, res) => {
         redirect_uri: GOOGLE_CALLBACK_URL,
         grant_type: "authorization_code",
     };
+
     const response = await fetch(GOOGLE_ACCESS_TOKEN_URL, {
         method: "POST",
         body: JSON.stringify(data),
     });
+
     const access_token_data = await response.json();
 
     const { id_token } = access_token_data;
+
     const token_info_response = await fetch(`${GOOGLE_TOKEN_INFO_URL}?id_token=${id_token}`);
-    const token_info =await token_info_response.json()
-    res.status(token_info_response.status).json(ApiSuccess.ok('User signed in',token_info));
+
+    const token_info = await token_info_response.json()
+
+    const createdUser = await User.findOneAndUpdate(
+        {
+            email: token_info.email
+        },
+        {
+            username: (token_info.name + Math.floor(1000 + Math.random() * 9000)).replace('', ''),
+            name: token_info.name,
+            email: token_info.email,
+            isVerified: token_info.email_verified,
+            accountType: 'google',
+            avatar: {
+                url: token_info.picture,
+            }
+        },
+        {
+            upsert: true,
+            new: true
+        }
+    )
+
+    const user = await User.findById(createdUser._id).select("-_v -password -createdAt -updatedAt -passwordResetToken -passwordResetExpires")
+
+    const accessToken = user.accessToken()
+    const refreshToken = user.refreshToken()
+
+    const cookieOptions = {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict"
+    }
+
+    res.cookie("accessToken", accessToken, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 })
+        .cookie("refreshToken", refreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 })
+        .status(token_info_response.status)
+        .json(ApiSuccess.ok('User signed in', { accessToken, refreshToken }
+        ));
 })
 
 

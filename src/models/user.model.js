@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 import { ACCESS_TOKEN_EXPIRES_IN, ACCESS_TOKEN_SECRET, JWT_EXPIRES_IN, JWT_SECRET, REFRESH_TOKEN_EXPIRES_IN, REFRESH_TOKEN_SECRET } from "../constants.js";
+import { lowercase } from "zod/v4";
 
 
 const userSchema = new Schema({
@@ -10,7 +11,8 @@ const userSchema = new Schema({
         required: true,
         unique: true,
         trim: true,
-        index: true
+        index: true,
+        lowercase:true
     },
     name: {
         type: String,
@@ -43,8 +45,25 @@ const userSchema = new Schema({
         type: String,
         enum: ["active", "inactive", "suspended"],
         default: "active"
+    },
+    accountType: {
+        type: String,
+        enum: ['local', 'google'],
+        default: 'local'
+    },
+    avatar: {
+        url: {
+            type: String,
+            default: 'null'
+        },
+        public_id: {
+            type: String,
+            default: null
+        }
     }
-}, { timestamps: true });
+
+},
+    { timestamps: true });
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified("password") || !this.password) return next()
@@ -57,7 +76,7 @@ userSchema.methods.comparePassword = async function (password) {
 }
 
 userSchema.methods.jwtToken = function () {
-    return jwt.sign({ id: this._id, username: this.username, email: this.email },JWT_SECRET, {
+    return jwt.sign({ id: this._id, username: this.username, email: this.email }, JWT_SECRET, {
         expiresIn: JWT_EXPIRES_IN
     })
 }
