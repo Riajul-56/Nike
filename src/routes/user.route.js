@@ -1,11 +1,12 @@
 import e from "express"
 import validationMiddleware from "../middlewares/validator.middleware.js"
 
-import { forgotPassword, googleCallBack, resetpassword, sigin, signinWithGoogle, signout, signup, updatePassword, updateUser, validateOpt, verifymail } from "../controllers/user/user.controller.js"
+import { avatarUpload, forgotPassword, googleCallBack, resetpassword, sigin, signinWithGoogle, signout, signup, updatePassword, updateUser, validateOpt, verifymail } from "../controllers/user/user.controller.js"
 
 import { userForgotPasswordOtpSchema, userForgotPasswordSchema, userPasswordUpdateSchema, userResetPasswordSchema, userSigninSchema, userSignupSchema, userUpdateSchema } from "../validators/user.validator.js"
 
 import auth from "../middlewares/auth.middleware.js"
+import upload from "../middlewares/fileUpload.middleware.js"
 
 const router = e.Router()
 
@@ -27,9 +28,11 @@ router.post("/verify-otp", validationMiddleware(userForgotPasswordOtpSchema), va
 
 router.post("/reset-password", validationMiddleware(userResetPasswordSchema), resetpassword)
 
-router.get("/google-signin",signinWithGoogle)
+router.get("/google-signin", signinWithGoogle)
 
-router.get("/google/callback",googleCallBack)
+router.get("/google/callback", googleCallBack)
+
+router.post("/avatar-upload", auth, upload.single('avatar'), avatarUpload)
 
 
 export default router

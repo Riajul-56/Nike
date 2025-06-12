@@ -79,7 +79,11 @@ const sigin = asyncHandler(async (req, res) => {
 
     const isMatch = await user.comparePassword(password)
     if (!isMatch) {
-        throw ApiError.notFound("Invalid Password")
+        throw ApiError.notFound("Invalid credentials")
+    }
+
+    if (user.isVerified === false) {
+        throw ApiError.forbidden('Email is not verified')
     }
 
     const accessToken = user.accessToken()
@@ -302,5 +306,12 @@ const resetpassword = asyncHandler(async (req, res) => {
     return res.status(200).json(ApiSuccess.ok('Password reset successfully'))
 })
 
+//============================================ Avatar Uploaded =======================================================================//
 
-export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle, googleCallBack }
+const avatarUpload = asyncHandler(async (req, res) => {
+    const avatar = req.file
+    return res.status(200).json(ApiSuccess.ok('Avatar uploaded', avatar))
+})
+
+
+export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle, googleCallBack, avatarUpload }
