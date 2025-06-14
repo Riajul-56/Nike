@@ -329,5 +329,4 @@ const avatarUpload = asyncHandler(async (req, res) => {
     ))
 })
 
-
 export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle, googleCallBack, avatarUpload }
