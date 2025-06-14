@@ -23,7 +23,7 @@ const auth = asyncHandler(async (req, res, next) => {
     if (!decodeToken?.id) {
         throw ApiError.unauthorized('Token does not contain valid user info.')
     }
-    const user = await User.findById(decodeToken.id)
+    const user = await User.findById(decodeToken.id).select('-_v -password -createdAt -updatedAt -passwordResetToken -passwordResetExpires')
     if (!user) {
         throw ApiError.unauthorized('User no longer exists.')
     }

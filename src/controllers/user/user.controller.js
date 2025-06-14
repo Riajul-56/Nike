@@ -329,4 +329,11 @@ const avatarUpload = asyncHandler(async (req, res) => {
     ))
 })
 
-export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle, googleCallBack, avatarUpload }
+
+//============================================ find user =======================================================================//
+
+const me=asyncHandler(async(req,res)=>{
+    return res.status(200).json(ApiSuccess.ok('User found',req.user))
+})
+
+export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle, googleCallBack, avatarUpload,me }
