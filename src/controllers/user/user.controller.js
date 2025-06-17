@@ -1,4 +1,3 @@
-import { overwrite } from "zod/v4";
 import { APP_URL, GOOGLE_ACCESS_TOKEN_URL, GOOGLE_CALLBACK_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_OAUTH_SCOPES, GOOGLE_OAUTH_URL, JWT_SECRET, GOOGLE_TOKEN_INFO_URL } from "../../constants.js";
 import { User } from "../../models/user.model.js";
 import ApiError from "../../utils/apiError.js";
@@ -7,6 +6,7 @@ import { asyncHandler } from "../../utils/asynceHandler.js";
 import { fileUpload } from "../../utils/fileupload.js";
 import { sendMail, forgotPasswordFormat, verifyEmailFormat } from "../../utils/mail.js";
 import jwt from "jsonwebtoken"
+import { avatarUploadSchema } from "../../validators/user.validator.js";
 
 
 //============================================ Sign Up =======================================================================//
@@ -312,18 +312,22 @@ const resetpassword = asyncHandler(async (req, res) => {
 
 const avatarUpload = asyncHandler(async (req, res) => {
     const avatar = req.file
-    const user=req.user
+    const avatarValidation = avatarUploadSchema.safeParse(avatar)
+    if (avatarValidation.error) {
+        throw ApiError.badRequest('Avatar is required')
+    }
+    const user = req.user
     const result = await fileUpload(avatar.path, {
         folder: 'avatar',
         use_filename: true,
-        overwrite:true,
+        overwrite: true,
         resource_type: 'image',
         transformation: [{ width: 300, height: 300, crop: 'fill', gravity: 'face', radius: 'max' }],
         public_id: req.user._id
     })
-    user.avatar={
-        public_id:result.public_id,
-        url:result.secure_url
+    user.avatar = {
+        public_id: result.public_id,
+        url: result.secure_url
     }
     return res.status(200).json(ApiSuccess.ok('Avatar uploaded', user
     ))
@@ -332,8 +336,8 @@ const avatarUpload = asyncHandler(async (req, res) => {
 
 //============================================ find user =======================================================================//
 
-const me=asyncHandler(async(req,res)=>{
-    return res.status(200).json(ApiSuccess.ok('User found',req.user))
+const me = asyncHandler(async (req, res) => {
+    return res.status(200).json(ApiSuccess.ok('User found', req.user))
 })
 
-export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle, googleCallBack, avatarUpload,me }
+export { signup, verifymail, sigin, signout, updateUser, updatePassword, forgotPassword, validateOpt, resetpassword, signinWithGoogle, googleCallBack, avatarUpload, me }

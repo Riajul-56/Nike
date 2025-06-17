@@ -2,7 +2,6 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 import { ACCESS_TOKEN_EXPIRES_IN, ACCESS_TOKEN_SECRET, JWT_EXPIRES_IN, JWT_SECRET, REFRESH_TOKEN_EXPIRES_IN, REFRESH_TOKEN_SECRET } from "../constants.js";
-import { lowercase } from "zod/v4";
 
 
 const userSchema = new Schema({

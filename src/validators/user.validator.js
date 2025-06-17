@@ -59,4 +59,9 @@ const userResetPasswordSchema = z.object({
         ),
 })
 
-export { userSignupSchema, userSigninSchema, userUpdateSchema, userPasswordUpdateSchema, userForgotPasswordSchema, userForgotPasswordOtpSchema, userResetPasswordSchema }
+const avatarUploadSchema=z.object({
+    avatar:z.any()
+})
+
+
+export { userSignupSchema, userSigninSchema, userUpdateSchema, userPasswordUpdateSchema, userForgotPasswordSchema, userForgotPasswordOtpSchema, userResetPasswordSchema, avatarUploadSchema }
