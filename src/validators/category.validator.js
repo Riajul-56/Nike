@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const createCategorySchema = z.object({
-    name: z.string,
-})
+  name: z.string,
+});
 
 const createImageSchema = z.object({
-    image: z.any(),
-})
+  image: z.any(),
+});
 
-export { createCategorySchema, createImageSchema }
+export { createCategorySchema, createImageSchema };

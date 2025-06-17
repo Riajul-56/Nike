@@ -1,31 +1,31 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
 const subCategory = new Schema(
-    {
-        name: {
-            type: String,
-            required: true,
-        },
-        image: {
-            url: {
-                type: String,
-                required: true,
-            },
-            public_id: {
-                type: String,
-                required: true,
-            }
-        },
-        category: {
-            type: Schema.Types.ObjectId,
-            ref: 'Category',
-            required: true,
-        }
-
+  {
+    name: {
+      type: String,
+      required: true,
     },
-    {
-        timestamps: true
-    }
-)
+    image: {
+      url: {
+        type: String,
+        required: true,
+      },
+      public_id: {
+        type: String,
+        required: true,
+      },
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export const SubCategory = mongoose.models.SubCategory || mongoose.model('SubCategory', subCategory)
+export const SubCategory =
+  mongoose.models.SubCategory || mongoose.model('SubCategory', subCategory);
