@@ -8,8 +8,14 @@ const category = new Schema(
       unique: true,
     },
     image: {
-      type: String,
-      required: true,
+      url: {
+        type: String,
+        required: true,
+      },
+      public_id: {
+        type: String,
+        required: true,
+      },
     },
     subCategories: [
       {
