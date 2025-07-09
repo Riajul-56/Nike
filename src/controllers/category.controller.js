@@ -13,6 +13,8 @@ const getCategories = asyncHandler(async (req, res) => {
   return res.status(200).json(ApiSuccess.ok('Categories fetched', categories));
 });
 
+// =================================== Create Category ===============================================================//
+
 const createCategory = asyncHandler(async (req, res) => {
   const image = req.file;
   const validateImage = createImageSchema.safeParse(image);
@@ -37,4 +39,20 @@ const createCategory = asyncHandler(async (req, res) => {
   return res.status(201).json(ApiSuccess.ok('Category created', category));
 });
 
-export { getCategories, createCategory };
+
+// =================================== Get Category ===============================================================//
+
+const getCategory = asyncHandler(async (req, res) => {
+  const {category}=req.params
+});
+
+
+// =================================== Update Category ===============================================================//
+
+
+// const updateCategory=asyncHandler(async(req,res)=>{
+
+// })
+
+
+export { getCategories, createCategory, };

@@ -7,6 +7,11 @@ const category = new Schema(
       required: true,
       unique: true,
     },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     image: {
       url: {
         type: String,
