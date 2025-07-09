@@ -20,7 +20,7 @@ const createCategory = asyncHandler(async (req, res) => {
     throw ApiError.badRequest('Image is requried');
   }
   const { name } = req.body;
-  const result = await fileUpload(image, Path2D, {
+  const result = await fileUpload(image.path, {
     folder: 'categories',
     use_filename: true,
     overwrite: true,
@@ -31,10 +31,10 @@ const createCategory = asyncHandler(async (req, res) => {
     name,
     image: {
       url: result.success_url,
-      public_idL: result.public_id,
+      public_id: result.public_id,
     },
   });
-  return res.status(201).json(ApiSuccess.ok('Category created', createCategory));
+  return res.status(201).json(ApiSuccess.ok('Category created', category));
 });
 
 export { getCategories, createCategory };
