@@ -25,7 +25,7 @@ const category = new Schema(
     subCategories: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Subcategory',
+        ref: 'SubCategory', 
       },
     ],
   },
