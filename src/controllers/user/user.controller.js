@@ -243,7 +243,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
 const updatePassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
-  const user = req.user;
+  const user = await User.findById(req.user._id) ;
   if (oldPassword === newPassword) {
     throw ApiError.badRequest('New password can not be same as old password');
   }
