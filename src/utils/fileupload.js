@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { CLOUD_API_KEY, CLOUD_API_SECRET, CLOUD_NAME } from '../constants.js';
 import ApiError from './apiError.js';
-import { unlinkSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 
 cloudinary.config({
   cloud_name: CLOUD_NAME,
@@ -10,13 +10,13 @@ cloudinary.config({
 });
 
 // Upload an image
-const fileUpload = async (file, option) => {
+const fileUpload = async (file, options) => {
   try {
-    const data = await cloudinary.uploader.upload(file, { ...option });
-    unlinkSync(file);
-    return data;
+    const result = await cloudinary.uploader.upload(file, { ...options });
+    if (existsSync(file)) unlinkSync(file);
+    return result;
   } catch (error) {
-    unlinkSync(file);
+    if (existsSync(file)) unlinkSync(file);
     throw ApiError.serverError(error.message);
   }
 };

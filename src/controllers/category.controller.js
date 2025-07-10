@@ -23,7 +23,6 @@ const createCategory = asyncHandler(async (req, res) => {
   }
 
   let { name, slug } = req.body;
-
   const isNameExists = await Category.findOne({ name });
   if (isNameExists) {
     throw ApiError.badRequest('Category name already esists');
@@ -34,7 +33,7 @@ const createCategory = asyncHandler(async (req, res) => {
     throw ApiError.badRequest('Category slug already esists');
   }
   if (!slug) {
-    slug = name.toLowerCase().replaceAll('', '-');
+    slug = name.toLowerCase().replaceAll(' ', '-');
   }
 
   const result = await fileUpload(image.path, {
@@ -53,7 +52,6 @@ const createCategory = asyncHandler(async (req, res) => {
     },
   });
   return res.status(201).json(ApiSuccess.ok('Category created', category));
-
 });
 
 // =================================== Get Category ===============================================================//
