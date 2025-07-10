@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 const createCategorySchema = z.object({
-  name: z.string,
+  name: z.string(),
+  slug: z.string().optional(),
 });
 
 const createImageSchema = z.object({

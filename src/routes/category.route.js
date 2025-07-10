@@ -9,6 +9,6 @@ const router = e.Router();
 router
   .route('/categories')
   .get(auth, getCategories)
-  .post(auth, validationMiddleware(createCategorySchema), upload.single('image', createCategory));
+  .post(auth, upload.single('image'), validationMiddleware(createCategorySchema), createCategory);
 
 export default router;

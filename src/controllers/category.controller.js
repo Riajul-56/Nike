@@ -21,7 +21,22 @@ const createCategory = asyncHandler(async (req, res) => {
   if (validateImage.error) {
     throw ApiError.badRequest('Image is requried');
   }
-  const { name } = req.body;
+
+  let { name, slug } = req.body;
+
+  const isNameExists = await Category.findOne({ name });
+  if (isNameExists) {
+    throw ApiError.badRequest('Category name already esists');
+  }
+
+  const isSlugExists = await Category.findOne({ slug });
+  if (isSlugExists) {
+    throw ApiError.badRequest('Category slug already esists');
+  }
+  if (!slug) {
+    slug = name.toLowerCase().replaceAll('', '-');
+  }
+
   const result = await fileUpload(image.path, {
     folder: 'categories',
     use_filename: true,
@@ -31,28 +46,26 @@ const createCategory = asyncHandler(async (req, res) => {
   });
   const category = await Category.create({
     name,
+    slug,
     image: {
-      url: result.success_url,
+      url: result.secure_url,
       public_id: result.public_id,
     },
   });
   return res.status(201).json(ApiSuccess.ok('Category created', category));
-});
 
+});
 
 // =================================== Get Category ===============================================================//
 
 const getCategory = asyncHandler(async (req, res) => {
-  const {category}=req.params
+  const { category } = req.params;
 });
 
-
 // =================================== Update Category ===============================================================//
-
 
 // const updateCategory=asyncHandler(async(req,res)=>{
 
 // })
 
-
-export { getCategories, createCategory, };
+export { getCategories, createCategory, getCategory };

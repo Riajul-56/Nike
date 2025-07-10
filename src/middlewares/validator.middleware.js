@@ -9,12 +9,12 @@ function validationMiddleware(schema) {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const formatedErrors = error.errors.map(err => ({
+        const formattedErrors = error.errors.map(err => ({
           field: err.path[0],
           message: err.message,
         }));
 
-        throw ApiError.badRequest('Validation error', formatedErrors);
+        throw ApiError.badRequest('Validation error', formattedErrors);
       } else {
         throw ApiError.serverError(error.message);
       }
