@@ -71,19 +71,20 @@ const getCategory = asyncHandler(async (req, res) => {
 // =================================== Update Category ===============================================================//
 
 const updateCategory = asyncHandler(async (req, res) => {
+  const slugParam=req.params
   const { name, slug } = req.body;
 
-  const category = await Category.findOne({ slug });
+  const category = await Category.findOne({ slug:slugParam });
   if (!category) {
     throw ApiError.notFound('Category not found');
   }
 
-  const isNameExists = await Category.findOne({ name });
+  const isNameExists = await Category.findOne({ _id: { $ne: category._id }, name });
   if (isNameExists) {
     throw ApiError.badRequest('Category name already esists');
   }
 
-  const isSlugExists = await Category.findOne({ slug });
+  const isSlugExists = await Category.findOne({ _id: { $ne: category._id }, slug });
   if (isSlugExists) {
     throw ApiError.badRequest('Category slug already esists');
   }
@@ -113,5 +114,3 @@ const updateCategory = asyncHandler(async (req, res) => {
 });
 
 export { getCategories, createCategory, getCategory, updateCategory };
-
-

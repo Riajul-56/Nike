@@ -15,14 +15,16 @@ const router = e.Router();
 router
   .route('/categories')
   .get(auth, getCategories)
-  .post(auth, upload.single('image'), validationMiddleware(createCategorySchema), createCategory)
+  .post(auth, upload.single('image'), validationMiddleware(createCategorySchema), createCategory);
+
+router
+  .get('/categories/:slug', auth, getCategory)
   .put(
+    '/categories/:slugParam',
     auth,
     upload.single('image'),
     validationMiddleware(createCategorySchema),
     updateCategory
   );
-
-router.get('/categories/:slug', auth, getCategory);
 
 export default router;
