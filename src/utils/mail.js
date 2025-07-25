@@ -19,7 +19,7 @@ async function sendMail(option) {
     const { emailBody, emailText } = mailgenConfig(option.mailFormat);
 
     await transporter.sendMail({
-      from: '"Nike" <contcat@nike.email>',
+      from: '"Nike" <contcat@nike.com>',
       to: option.email,
       subject: option.subject,
       text: emailText,
