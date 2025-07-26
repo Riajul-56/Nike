@@ -57,8 +57,8 @@ const createCategory = asyncHandler(async (req, res) => {
 // =================================== Get Category ===============================================================//
 
 const getCategory = asyncHandler(async (req, res) => {
-  const { slug } = req.params;
-  const category = await Category.findOne({ slug }).populate({
+  const { slugParam } = req.params;
+  const category = await Category.findOne({ slug: slugParam }).populate({
     path: 'subCategories',
     model: 'SubCategory',
   });
@@ -71,7 +71,7 @@ const getCategory = asyncHandler(async (req, res) => {
 // =================================== Update Category ===============================================================//
 
 const updateCategory = asyncHandler(async (req, res) => {
-  const slugParam = req.params;
+  const { slugParam } = req.params;
   const { name, slug } = req.body;
 
   const category = await Category.findOne({ slug: slugParam });
@@ -116,12 +116,11 @@ const updateCategory = asyncHandler(async (req, res) => {
 // =================================== Delete Category ===============================================================//
 
 const deleteCategory = asyncHandler(async (req, res) => {
-  const slug = req.params;
-  const category = await category.findOne({ slug });
+  const { slugParam } = req.params;
+  const category = await Category.findOneAndDelete({ slug: slugParam });
   if (!category) {
     throw ApiError.notFound('Category not found');
   }
-  await category.remove();
   return res.status(200).json(ApiSuccess.ok('Category deleted'));
 });
 
