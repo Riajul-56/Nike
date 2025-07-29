@@ -25,9 +25,14 @@ const category = new Schema(
     subCategories: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'SubCategory', 
+        ref: 'SubCategory',
       },
     ],
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
   },
   {
     timestamps: true,
