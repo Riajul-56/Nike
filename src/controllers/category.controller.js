@@ -91,7 +91,7 @@ const updateCategory = asyncHandler(async (req, res) => {
 
   const isSlugExists = await Category.findOne({ _id: { $ne: category._id }, slug });
   if (isSlugExists) {
-    throw ApiError.badRequest('Category slug already esists');
+    throw ApiError.badRequest('0 slug already esists');
   }
   if (!slug) {
     slug = name.toLowerCase().replaceAll(' ', '-');
