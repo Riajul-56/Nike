@@ -9,7 +9,7 @@ import {
   JWT_SECRET,
   GOOGLE_TOKEN_INFO_URL,
 } from '../constants.js';
-import { User } from '../../models/index.model.js';
+import {User} from "../models/user.model.js"
 import ApiError from '../utils/apiError.js';
 import ApiSuccess from '../utils/apiSuccess.js';
 import { asyncHandler } from '../utils/asynceHandler.js';
