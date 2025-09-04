@@ -1,4 +1,5 @@
 import { Category } from '../models/index.model.js';
+import { Subcategory } from '../models/subCategory.model.js';
 import ApiError from '../utils/apiError.js';
 import ApiSuccess from '../utils/apiSuccess.js';
 import { asyncHandler } from '../utils/asynceHandler.js';
@@ -61,14 +62,12 @@ const createCategory = asyncHandler(async (req, res) => {
 
 const getCategory = asyncHandler(async (req, res) => {
   const { slugParam } = req.params;
-  const category = await Category.findOne({ slug: slugParam }).populate({
-    path: 'subCategories',
-    model: 'SubCategory',
-  });
+  const category = await Category.find({ slug: slugParam });
+  const subCategories = await Subcategory.find({ category: category._id });
   if (!category) {
     throw ApiError.notFound('Category not found');
   }
-  return res.status(200).json(ApiSuccess.ok('Category fetch', category));
+  return res.status(200).json(ApiSuccess.ok('Category fetch', { category, subCategories }));
 });
 
 // =================================== Update Category ===============================================================//

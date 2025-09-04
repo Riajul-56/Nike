@@ -8,15 +8,15 @@ import {
   GOOGLE_OAUTH_URL,
   JWT_SECRET,
   GOOGLE_TOKEN_INFO_URL,
-} from '../../constants.js';
+} from '../constants.js';
 import { User } from '../../models/index.model.js';
-import ApiError from '../../utils/apiError.js';
-import ApiSuccess from '../../utils/apiSuccess.js';
-import { asyncHandler } from '../../utils/asynceHandler.js';
-import { fileUpload } from '../../utils/fileupload.js';
-import { sendMail, forgotPasswordFormat, verifyEmailFormat } from '../../utils/mail.js';
+import ApiError from '../utils/apiError.js';
+import ApiSuccess from '../utils/apiSuccess.js';
+import { asyncHandler } from '../utils/asynceHandler.js';
+import { fileUpload } from '../utils/fileupload.js';
+import { sendMail, forgotPasswordFormat, verifyEmailFormat } from '../utils/mail.js';
 import jwt from 'jsonwebtoken';
-import { avatarUploadSchema } from '../../validators/user.validator.js';
+import { avatarUploadSchema } from '../validators/user.validator.js';
 
 //============================================ Sign Up =======================================================================//
 
