@@ -1,4 +1,4 @@
-import { Category } from '../models/index.model.js';
+import { Category } from '../models/category.model.js';
 import { Subcategory } from '../models/subCategory.model.js';
 import ApiError from '../utils/apiError.js';
 import ApiSuccess from '../utils/apiSuccess.js';
@@ -20,7 +20,7 @@ const getCategories = asyncHandler(async (req, res) => {
 
 const createCategory = asyncHandler(async (req, res) => {
   const image = req.file;
-  const validateImage = createImageSchema.safeParse(image);
+  const validateImage = createImageSchema.safeParse({ image: req.file });
   if (validateImage.error) {
     throw ApiError.badRequest('Image is requried');
   }

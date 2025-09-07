@@ -1,5 +1,8 @@
 import { Subcategory } from '../models/subCategory.model.js';
-import ApiSuccess from '../utils/apiSuccess';
+import ApiError from '../utils/apiError.js';
+import ApiSuccess from '../utils/apiSuccess.js';
+import { asyncHandler } from '../utils/asynceHandler.js';
+import { fileUpload } from '../utils/fileupload.js';
 import { subCategoryImageSchema } from '../validators/subcategory.validator.js';
 
 const getSubcategories = asyncHandler(async (req, res) => {
@@ -38,8 +41,8 @@ const createSubcategory = asyncHandler(async (req, res) => {
   const result = await fileUpload(image.path, {
     folder: 'subcategories',
     use_filename: true,
-    overwrite: true,
     resource_type: 'image',
+    overwrite: true,
     public_id: name,
   });
   const subcategory = await Subcategory.create({
@@ -59,7 +62,7 @@ const createSubcategory = asyncHandler(async (req, res) => {
 
 const getsubCategory = asyncHandler(async (req, res) => {
   const { slugParam } = req.params;
-  const subcategory = await Subcategory.findOne({ slug: slugParam });
+  const subcategory = await Subcategory.find({ slug: slugParam });
   if (!subcategory) {
     throw ApiError.notFound('Subcategory not found');
   }
@@ -86,7 +89,7 @@ const updateSubCategory = asyncHandler(async (req, res) => {
 
   const isSlugExists = await Subcategory.findOne({ _id: { $ne: subcategory._id }, slug });
   if (isSlugExists) {
-    throw ApiError.badRequest('0 slug already esists');
+    throw ApiError.badRequest('Subcategory slug already esists');
   }
   if (!slug) {
     slug = name.toLowerCase().replaceAll(' ', '-');
@@ -97,8 +100,8 @@ const updateSubCategory = asyncHandler(async (req, res) => {
     const result = await fileUpload(image.path, {
       folder: 'subcategories',
       use_filename: true,
-      overwrite: true,
       resource_type: 'image',
+      overwrite: true,
       public_id: name,
     });
     subcategory.image = {
@@ -109,6 +112,7 @@ const updateSubCategory = asyncHandler(async (req, res) => {
 
   subcategory.name = name;
   subcategory.slug = slug;
+  subcategory.category = category;
   await subcategory.save();
   return res.status(200).json(ApiSuccess.ok('Subcategory updated', subcategory));
 });

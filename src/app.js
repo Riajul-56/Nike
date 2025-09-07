@@ -22,9 +22,11 @@ app.use(cookieParser());
 import healthCheckRoute from './routes/healthCheck.route.js';
 import userRoute from './routes/user.route.js';
 import categoryRoute from './routes/category.route.js';
+import subcategoryRoute from './routes/subcategory.route.js';
 
 app.use(healthCheckRoute);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1', categoryRoute);
+app.use('/api/v1', subcategoryRoute);
 app.use(errorHandler);
 export { app };

@@ -8,7 +8,7 @@ import {
   getsubCategory,
   updateSubCategory,
 } from '../controllers/subcategory.controller.js';
-import { subCategoryImageSchema } from '../validators/subcategory.validator.js';
+import { createSubcategorySchema, subCategoryImageSchema } from '../validators/subcategory.validator.js';
 
 const router = e.Router();
 
@@ -18,7 +18,7 @@ router
   .post(
     auth,
     upload.single('image'),
-    validationMiddleware(subCategoryImageSchema),
+    validationMiddleware(createSubcategorySchema),
     createSubcategory
   );
 

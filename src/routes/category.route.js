@@ -22,6 +22,7 @@ router
 router
   .route('/categories/:slugParam')
   .get(auth, getCategory)
-  .put(auth, upload.single('image'), validationMiddleware(createCategorySchema), updateCategory).delete(auth,deleteCategory);
+  .put(auth, upload.single('image'), validationMiddleware(createCategorySchema), updateCategory)
+  .delete(auth, deleteCategory);
 
 export default router;

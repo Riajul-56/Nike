@@ -15,7 +15,7 @@ import {
   updateUser,
   validateOpt,
   verifymail,
-} from '../controllers/user/user.controller.js';
+} from '../controllers/user.controller.js';
 
 import {
   userForgotPasswordOtpSchema,
