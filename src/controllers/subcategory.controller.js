@@ -73,7 +73,7 @@ const getsubCategory = asyncHandler(async (req, res) => {
 
 const updateSubCategory = asyncHandler(async (req, res) => {
   const { slugParam } = req.params;
-  const { name, slug, category } = req.body;
+  let { name, slug, category } = req.body;
 
   const subcategory = await Subcategory.findOne({
     $and: [{ slug: slugParam }, { createdBy: req.user._id }],
