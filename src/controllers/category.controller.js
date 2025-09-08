@@ -127,7 +127,8 @@ const deleteCategory = asyncHandler(async (req, res) => {
   if (!category) {
     throw ApiError.notFound('Category not found');
   }
-  return res.status(200).json(ApiSuccess.noContent('Category deleted'));
+  await Subcategory.deleteMany({ category: category._id });
+  return res.status(204).json(ApiSuccess.noContent('Category deleted'));
 });
 
 export { getCategories, createCategory, getCategory, updateCategory, deleteCategory };
